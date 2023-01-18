@@ -1,0 +1,94 @@
+for i, {1, 2, 3}
+    print i // all statements must end with a newline
+    print i + 1
+end
+// empty lines are ignored
+if 1 < 2
+    print 1
+else
+    print 2
+end
+
+if 1 < 2
+    print 1
+else if 2 < 3
+    print 2
+else
+    print 3
+end
+
+while 1 < 2
+    print 1
+    break
+    continue
+end
+
+fn add a, b
+    return a + b
+end
+
+add 1, 2
+
+fn add a, b -> a + b
+
+fn foo
+    print 1
+end
+
+fn foo -> 1
+
+a += b
+b -= c
+c *= a
+a /= b
+
+var list = {1, 2, 3}
+list:0 = 4
+print list:0
+
+a = (b
+     + c
+     - d)
+
+-- Grammar --
+
+expr_list = expr (',' expr)*
+id_list = id (',' id)*
+assign_op = '=' | '+=' | '-=' | '*=' | '/=' | '%='
+program = {statement}
+statement =
+      if_statement
+    | while_statement
+    | for_statement
+    | function_statement
+    | RETURN expr? NEWLINE
+    | BREAK NEWLINE
+    | CONTINUE NEWLINE
+    | ID expr_list? NEWLINE
+    | ID assign_op expr NEWLINE
+    | ID ':' EXPR assign_op expr NEWLINE
+    | NEWLINE
+if_statement = IF expr statement (ELSE statement)?
+             | IF expr NEWLINE {statement} (ELSE NEWLINE {statement})? END NEWLINE
+while_statement = WHILE expr statement NEWLINE
+                | WHILE expr NEWLINE {statement} END NEWLINE
+for_statement = FOR ID ',' expr statement NEWLINE
+              | FOR ID ',' expr NEWLINE {statement} END NEWLINE
+function_statement = FN ID id_list? NEWLINE {statement} END NEWLINE
+                   | FN ID id_list? '->' expr NEWLINE
+primary =
+    NUMBER
+    | STRING
+    | ID
+    | BOOL
+    | '(' expr ')'
+    | '{' ( expr_list? | NEWLINE? expr? (NEWLINE expr?)* NEWLINE? ) '}'
+call = primary ('(' expr_list? ')' | ':' expr )?
+unary = ('+' | '-' | '!') unary
+      | call
+factor = unary {('*' | '/' | '%') unary}
+term = factor {('+' | '-') factor}
+comparison = term {('<' | '>' | '<=' | '>=') term}
+equality = comparison {('==' | '!=') comparison}
+and = equality {AND equality}
+expr = and {OR and}
