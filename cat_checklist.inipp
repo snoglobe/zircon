@@ -2,8 +2,9 @@
 
 [Info]
 name = "zircon"
+version = "0.0.0"
 
 [Download]
 dependencies = []
-files = []
+files = ["zircon.h"]
 
